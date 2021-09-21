@@ -10,12 +10,12 @@
       "id": 2,
       "text": "Meeting with coding classmates",
       "day": "Feb 6th at 1:30pm",
-      "reminder": true
+      "reminder": false
     },
     {
       "text": "Testing",
       "day": "testing again",
-      "reminder": false,
+      "reminder": true,
       "id": 3
     }
   ]

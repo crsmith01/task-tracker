@@ -2,6 +2,7 @@ import './App.css';
 import Header from './components/Header';
 import Tasks from './components/Tasks';
 import AddTask from './components/AddTask';
+import Footer from './components/Footer';
 
 import { useState, useEffect } from 'react';
 
@@ -12,7 +13,7 @@ function App() {
   const [tasks, setTasks] = useState([]);
 
   // for right when page loads
-  useEffect (() => {
+  useEffect(() => {
     const getTasks = async () => {
       const tasksFromServer = await fetchTasks();
       // add setTasks to the state and pass in tasksFromServer - aka fetched tasks
@@ -23,16 +24,27 @@ function App() {
     // This is where we'd pass in a value if we wanted that value to change when we did something - like user
   }, [])
 
-// Fetch Tasks
-const fetchTasks = async () => {
-  const res = await fetch('http://localhost:5000/tasks');
-  const data = await res.json()
+  // Fetch Tasks
+  const fetchTasks = async () => {
+    const res = await fetch('http://localhost:5000/tasks');
+    const data = await res.json()
 
-  console.log(data);
-  // set data as the state
+    console.log(data);
+    // set data as the state
 
-  return data;
-}
+    return data;
+  };
+
+  // Fetch one task
+  const fetchTask = async (id) => {
+    const res = await fetch(`http://localhost:5000/tasks/${id}`);
+    const data = await res.json()
+
+    console.log(data);
+    // set data as the state
+
+    return data;
+  };
 
 
   // Add Task
@@ -41,7 +53,7 @@ const fetchTasks = async () => {
 
     const res = await fetch(`http://localhost:5000/tasks`, {
       method: 'POST',
-      headers: {'Content-type': 'application/json'},
+      headers: { 'Content-type': 'application/json' },
       body: JSON.stringify(task)
     })
 
@@ -74,7 +86,20 @@ const fetchTasks = async () => {
   };
 
   // Toggle reminder
-  const toggleReminder = (id) => {
+  const toggleReminder = async (id) => {
+    const taskToToggle = await fetchTask(id);
+    const updatedTask = { ...taskToToggle, reminder: !taskToToggle.reminder };
+
+    const res = await fetch(`http://localhost:5000/tasks/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify(updatedTask)
+    })
+
+    const data = await res.json();
+
     console.log(id);
     // tasks is from state
     // task id in current iteration is equal to task that is passed in, then we have specific object, else it will be no change
@@ -82,15 +107,15 @@ const fetchTasks = async () => {
     // set reminder to opposite of what it was (using ternary operator)
     setTasks(
       tasks.map((task) =>
-        task.id === id ? { ...task, reminder: !task.reminder } : task))
+        task.id === id ? { ...task, reminder: data.reminder } : task))
   };
 
   return (
     <div className="container">
       <Header
         // toggle between the form and the list = by setting it to the opposite of what it is
-        onAdd={() => setShowAddTask(!showAddTask)} 
-        showAddTask={showAddTask}/>
+        onAdd={() => setShowAddTask(!showAddTask)}
+        showAddTask={showAddTask} />
       {/* && here is a basically a shorter way of using a ternary function but without the else - so if it's true do this, if not do nothing  */}
       {showAddTask && <AddTask onAdd={addTask} />}
       {tasks.length > 0 ? <Tasks
@@ -98,6 +123,7 @@ const fetchTasks = async () => {
         onDelete={deleteTask}
         onToggle={toggleReminder}
       /> : 'There are currently no tasks to show.'}
+      <Footer />
     </div>
   );
 };
