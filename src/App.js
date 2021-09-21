@@ -39,10 +39,10 @@ function App() {
   return (
     <div className="container">
       <Header />
-      <Tasks
+      {tasks.length > 0 ? <Tasks
         tasks={tasks}
         onDelete={deleteTask}
-      />
+      /> : 'There are currently no tasks to show.'}
     </div>
   );
 }
