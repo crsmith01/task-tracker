@@ -3,7 +3,9 @@ import Header from './components/Header';
 import Tasks from './components/Tasks';
 import AddTask from './components/AddTask';
 import Footer from './components/Footer';
+import About from './components/About';
 
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
 
@@ -111,20 +113,35 @@ function App() {
   };
 
   return (
-    <div className="container">
-      <Header
-        // toggle between the form and the list = by setting it to the opposite of what it is
-        onAdd={() => setShowAddTask(!showAddTask)}
-        showAddTask={showAddTask} />
-      {/* && here is a basically a shorter way of using a ternary function but without the else - so if it's true do this, if not do nothing  */}
-      {showAddTask && <AddTask onAdd={addTask} />}
-      {tasks.length > 0 ? <Tasks
-        tasks={tasks}
-        onDelete={deleteTask}
-        onToggle={toggleReminder}
-      /> : 'There are currently no tasks to show.'}
-      <Footer />
-    </div>
+    <Router>
+      <div className="container">
+        <Header
+          // toggle between the form and the list = by setting it to the opposite of what it is
+          onAdd={() => setShowAddTask(!showAddTask)}
+          showAddTask={showAddTask} />
+        <Route
+          path='/'
+          exact
+          render={(props) => (
+            <>
+
+              {/* && here is a basically a shorter way of using a ternary function but without the else - so if it's true do this, if not do nothing  */}
+              {showAddTask && <AddTask onAdd={addTask} />}
+              {tasks.length > 0 ? (
+                <Tasks
+                  tasks={tasks}
+                  onDelete={deleteTask}
+                  onToggle={toggleReminder}
+                />
+              ) : ('There are currently no tasks to show.'
+              )}
+            </>
+          )}
+        />
+        <Route path='/about' component={About} />
+        <Footer />
+      </div>
+    </Router>
   );
 };
 
