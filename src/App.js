@@ -7,6 +7,8 @@ import { useState } from 'react';
 
 
 function App() {
+  // boolean set to false by default
+  const [showAddTask, setShowAddTask] = useState(false);
   const [tasks, setTasks] = useState([
     {
       id: 1,
@@ -33,7 +35,7 @@ function App() {
     console.log(task);
     // give random number to id
     const id = Math.floor(Math.random() * 10000) + 1;
-    const newTask = {id, ...task};
+    const newTask = { id, ...task };
     // tasks that are there and adding the new task on
     setTasks([...tasks, newTask])
   }
@@ -61,9 +63,11 @@ function App() {
 
   return (
     <div className="container">
-      <Header />
-      <AddTask 
-      onAdd={addTask}/>
+      <Header
+        // toggle between the form and the list = by setting it to the opposite of what it is
+        onAdd={() => setShowAddTask(!showAddTask)} />
+      {/* && here is a basically a shorter way of using a ternary function but without the else - so if it's true do this, if not do nothing  */}
+      {showAddTask && <AddTask onAdd={addTask} />}
       {tasks.length > 0 ? <Tasks
         tasks={tasks}
         onDelete={deleteTask}
