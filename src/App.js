@@ -35,6 +35,17 @@ function App() {
     setTasks(tasks.filter((task) => task.id !== id))
   }
 
+  // Toggle reminder
+  const toggleReminder = (id) => {
+    console.log(id);
+    // tasks is from state
+    // task id in current iteration is equal to task that is passed in, then we have specific object, else it will be no change
+    // spread operator 
+    // set reminder to opposite of what it was (using ternary operator)
+    setTasks(
+      tasks.map((task) =>
+        task.id === id ? { ...task, reminder: !task.reminder } : task))
+  }
 
   return (
     <div className="container">
@@ -42,6 +53,7 @@ function App() {
       {tasks.length > 0 ? <Tasks
         tasks={tasks}
         onDelete={deleteTask}
+        onToggle={toggleReminder}
       /> : 'There are currently no tasks to show.'}
     </div>
   );
