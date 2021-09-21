@@ -1,3 +1,6 @@
+# This simple React app served as a little refresher for me and introduced me to a helpful VS Code extension. It follows Traversy Media's "React JS Crash Course 2021" video.
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
